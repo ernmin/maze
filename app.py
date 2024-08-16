@@ -17,6 +17,9 @@ def index():
 
 #do a login like finance app but using flash instead of apology()
 
+#do the base html page
+
+#create the index page
 
 #decide what sql database will be like
 
