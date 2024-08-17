@@ -1,6 +1,7 @@
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, g, request, url_for
 from flask_session import Session
+from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
@@ -11,7 +12,17 @@ Session(app)
 
 db = SQL("sqlite:///maze.db")
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+
+    return decorated_function
+
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
@@ -56,3 +67,5 @@ def login():
 #decide what sql database will be like
 
 #index page to display moves and add moves, like birthday app.py
+
+#add random event every 5 moves maybe using flash?
