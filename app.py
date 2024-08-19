@@ -37,7 +37,8 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return flash("must provide username")
+            flash("Please provide your Username")
+            return render_template("login.html")
 
         # Query database for username
         rows = db.execute(
@@ -46,7 +47,8 @@ def login():
 
         # Ensure username exists and password is correct
         if len(rows) != 1 :
-            return flash("invalid username")
+            flash("Invalid Username")
+            return render_template("login.html")
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -58,7 +60,7 @@ def login():
     else:
         return render_template("login.html")
 
-#do a login like finance app but using flash instead of apology()
+#do a login like finance app but using flash instead of apology() - DONE
 
 #do the base html page
 
