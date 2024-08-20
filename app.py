@@ -26,6 +26,24 @@ def login_required(f):
 def index():
     return render_template('index.html')
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        if not request.form.get("username"):
+            flash("Please provide your Username")
+            return render_template("register.html")
+        else:
+            username = request.form.get("username")
+            try:
+                db.execute("INSERT INTO users (username) VALUES(?)", username)
+            except:
+                flash("Username already taken")
+                return render_template("register.html")
+            return redirect("/login")
+    else:
+        return render_template("register.html")    
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
