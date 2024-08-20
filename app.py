@@ -21,11 +21,20 @@ def login_required(f):
 
     return decorated_function
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
-    #create table in SQL to store the moves
-    return render_template('index.html')
+    if request.method == "POST":
+        P1 = request.form.get("P1")
+        P2 = request.form.get("P2")
+        P3 = request.form.get("P3")
+        P4 = request.form.get("P4")
+        db.execute("INSERT INTO moves (P1, P2, P3, P4) VALUES(?, ?, ?, ?)", P1, P2, P3, P4)
+
+        return redirect("/")
+    else:
+        rows = db.execute("SELECT * FROM moves")
+        return render_template('index.html', rows = rows)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
