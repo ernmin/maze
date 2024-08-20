@@ -5,4 +5,53 @@
 {% endblock %}
 
 {% block main %}
+<div class="container">
+    <div class="section">
+        <form action="/" method="post">
+            <select name="P1">
+                <option disabled selected value="">P1</option>
+                <option>Up</option>
+                <option>Down</option>
+                <option>Left</option>
+                <option>Right</option>
+            </select>
+            <select name="P2">
+                <option disabled selected value="">P2</option>
+                <option>Up</option>
+                <option>Down</option>
+                <option>Left</option>
+                <option>Right</option>
+            </select>
+            <select name="P3">
+                <option disabled selected value="">P3</option>
+                <option>Up</option>
+                <option>Down</option>
+                <option>Left</option>
+                <option>Right</option>
+            </select>
+            <select name="P4">
+                <option disabled selected value="">P4</option>
+                <option>Up</option>
+                <option>Down</option>
+                <option>Left</option>
+                <option>Right</option>
+            </select>
+        </form>
+    </div>
+    <div class="section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Player 3</th>
+                    <th>Player 4</th>
+                </tr>
+            </thead>
+            <tbody>
+<!--Loop through the database entries to display them in this table -->
+            </tbody>
+        </table>
+    </div>
+</div>    
 {% endblock %}

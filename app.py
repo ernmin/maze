@@ -24,6 +24,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def index():
+    #create table in SQL to store the moves
     return render_template('index.html')
 
 @app.route("/register", methods=["GET", "POST"])
