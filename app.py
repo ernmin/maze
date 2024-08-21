@@ -55,14 +55,19 @@ def majority(P1, P2, P3, P4):
 def index():
     if request.method == "POST":
         if request.form['btn'] == 'move':
+            #user_id = session["user_id"]
             P1 = request.form.get("P1")
             P2 = request.form.get("P2")
             P3 = request.form.get("P3")
             P4 = request.form.get("P4")
             team = majority(P1,P2,P3,P4)
-            db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
-
-            return redirect("/")
+            if P1 == None or P2 == None or P3 == None or P4 == None:
+                flash("Select moves for all players")
+                return render_template('/')
+            else:
+                db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
+                return redirect("/")
+        
         elif request.form['btn'] == 'delete':
             db.execute("DELETE FROM moves ORDER BY id DESC LIMIT 1")
             return redirect("/")
@@ -133,14 +138,6 @@ def logout():
     # Redirect user to login form
     return redirect("/")    
 
-#do a login like finance app but using flash instead of apology() - DONE
-
-#do the base html page
-
-#create the index page
-
-#decide what sql database will be like
-
-#index page to display moves and add moves, like birthday app.py
+#how to only display moves for your account?
 
 #add random event every 5 moves maybe using flash?
