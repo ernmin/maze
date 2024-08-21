@@ -54,14 +54,18 @@ def majority(P1, P2, P3, P4):
 @login_required
 def index():
     if request.method == "POST":
-        P1 = request.form.get("P1")
-        P2 = request.form.get("P2")
-        P3 = request.form.get("P3")
-        P4 = request.form.get("P4")
-        team = majority(P1,P2,P3,P4)
-        db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
+        if request.form['btn'] == 'move':
+            P1 = request.form.get("P1")
+            P2 = request.form.get("P2")
+            P3 = request.form.get("P3")
+            P4 = request.form.get("P4")
+            team = majority(P1,P2,P3,P4)
+            db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
 
-        return redirect("/")
+            return redirect("/")
+        elif request.form['btn'] == 'delete':
+            db.execute("DELETE FROM moves ORDER BY id DESC LIMIT 1")
+            return redirect("/")
     else:
         rows = db.execute("SELECT * FROM moves")
         return render_template('index.html', rows = rows)
