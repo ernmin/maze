@@ -21,6 +21,35 @@ def login_required(f):
 
     return decorated_function
 
+def majority(P1, P2, P3, P4):
+    votes = [P1, P2, P3, P4]
+    votes_table = {}
+    for vote in votes:
+        if vote in votes_table:
+            votes_table[vote] += 1
+        else:
+            votes_table[vote] = 1
+    if len(votes_table) == 1:
+        for key, value in votes_table.items():
+            return key
+    elif len(votes_table) == 4:
+        return 'Draw'
+    elif len(votes_table) == 3:
+        for key, value in votes_table.items():
+            if value == 2:
+                return key
+            else:
+                continue
+    else:
+        for key, value in votes_table.items():
+            if value == 3:
+                return key
+            elif value == 2:
+                return 'Draw'
+            else:
+                continue
+
+
 @app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
@@ -29,12 +58,14 @@ def index():
         P2 = request.form.get("P2")
         P3 = request.form.get("P3")
         P4 = request.form.get("P4")
-        db.execute("INSERT INTO moves (P1, P2, P3, P4) VALUES(?, ?, ?, ?)", P1, P2, P3, P4)
+        team = majority(P1,P2,P3,P4)
+        db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
 
         return redirect("/")
     else:
         rows = db.execute("SELECT * FROM moves")
         return render_template('index.html', rows = rows)
+#how to number the moves and delete the moves, only can delete the latest move and not the previous moves
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
