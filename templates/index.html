@@ -54,8 +54,9 @@
             <tbody>
 <!--Loop through the database entries to display them in this table -->
                 {% for row in rows %}
+                    
                     <tr>
-                        <td>{{ row.id }}</td>
+                        <td>{{ loop.index }}</td>
                         <td>{{ row.P1 }}</td>
                         <td>{{ row.P2 }}</td>
                         <td>{{ row.P3 }}</td>

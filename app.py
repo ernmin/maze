@@ -53,27 +53,28 @@ def majority(P1, P2, P3, P4):
 @app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
+    user_id = session["user_id"]
     if request.method == "POST":
         if request.form['btn'] == 'move':
-            #user_id = session["user_id"]
             P1 = request.form.get("P1")
             P2 = request.form.get("P2")
             P3 = request.form.get("P3")
             P4 = request.form.get("P4")
             team = majority(P1,P2,P3,P4)
+            #if no option is given site will crash, code below does not work
             if P1 == None or P2 == None or P3 == None or P4 == None:
-                flash("Select moves for all players")
-                return render_template('/')
+                flash("Please fill in the moves")
+                return redirect('/')
             else:
-                db.execute("INSERT INTO moves (P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?)", P1, P2, P3, P4, team)
+                db.execute("INSERT INTO moves (user_id, P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?, ?)", user_id, P1, P2, P3, P4, team)
                 return redirect("/")
         
         elif request.form['btn'] == 'delete':
-            db.execute("DELETE FROM moves ORDER BY id DESC LIMIT 1")
+            db.execute("DELETE FROM moves ORDER BY time DESC LIMIT 1")
             return redirect("/")
     else:
-        rows = db.execute("SELECT * FROM moves")
-        return render_template('index.html', rows = rows)
+        rows = db.execute("SELECT * FROM moves WHERE user_id = ?", user_id)
+        return render_template('index.html', rows = rows, user_id = user_id)
 #how to number the moves and delete the moves, only can delete the latest move and not the previous moves
 
 @app.route("/register", methods=["GET", "POST"])
