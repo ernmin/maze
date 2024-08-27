@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, render_template, request, session, g, 
 from flask_session import Session
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
+import random
 
 app = Flask(__name__)
 
@@ -48,7 +49,13 @@ def majority(P1, P2, P3, P4):
                 return 'Draw'
             else:
                 continue
+def rand_num():
+    list = [1, 2, 3]
+    return random.choice(list)
 
+def rand_direction():
+    list = ['Up', 'Down', 'Left', 'Right']
+    return random.choice(list)
 
 @app.route('/', methods=["GET", "POST"])
 @login_required
@@ -61,10 +68,20 @@ def index():
             P3 = request.form.get("P3")
             P4 = request.form.get("P4")
             team = majority(P1,P2,P3,P4)
+            movenumber = db.execute("SELECT COUNT(*) FROM moves WHERE user_id = ?", user_id)
+            movenumber = int(movenumber[0].get("COUNT(*)"))
             #if no option is given site will crash, code below does not work
             if P1 == None or P2 == None or P3 == None or P4 == None:
                 flash("Please fill in the moves")
                 return redirect('/')
+            elif movenumber > 8 and movenumber%9 == 0:
+                #random number between 1-3 and 4 directions and flash message
+                direction = rand_direction()
+                move = rand_num()
+                message = 'All players move ' + str(move) + ' space(s) ' + str(direction)
+                flash(message)
+                db.execute("INSERT INTO moves (user_id, P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?, ?)", user_id, P1, P2, P3, P4, team)
+                return redirect("/")
             else:
                 db.execute("INSERT INTO moves (user_id, P1, P2, P3, P4, Team) VALUES(?, ?, ?, ?, ?, ?)", user_id, P1, P2, P3, P4, team)
                 return redirect("/")
